@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"
+        xmlns:th="http://www.thymeleaf.org">
+<link href="../css/bootstrap.min.css"
+        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>currency calculator</title>
+</head>
+<body>
+<div class="container fs-4" style="max-width: 700px; margin-top: 100px">
+<h1 class="fw-bold">환율 계산</h1>
+<div style="margin-top: 30px">
+
+    <div>
+        <p>송금국가: 미국(USD)</p>
+    </div>
+
+    <div>
+        <label>수취국가:
+        <select id="currency">
+            <option value="KRW">한국(KRW)</option>
+            <option value="JPY">일본(JPY)</option>
+            <option value="PHP">필리핀(PHP)</option>
+        </select>
+        </label>
+    </div>
+
+    <div>
+        환율: <label id="exchangeRate"></label>
+    </div>
+
+    <div>
+        송금액: <input class="receivingAmount"/> USD
+        <label class="field-error"></label>
+    </div>
+
+        <div class="mx-auto">
+            <button type="button" class="btn btn-primary" onclick="getReceivingAmount()" >submit</button>
+        </div>
+    </div>
+        <div class="container-md" style="margin-top: 50px">
+            <label class="calculatedAmount"></label>
+        </div>
+</div>
+</body>
+
+<script>
+    $(window).on("load", getExchangeRate());
+    $("#currency").on("change", function (){
+        getExchangeRate();
+    });
+
+    function getExchangeRate(){
+        let receivingCountry = $("#currency option:selected").val();
+        $.ajax({
+            url: '/api/exchange-rate?receivingCountry='+receivingCountry,
+            method: 'GET',
+            success: function (data){
+                    $("#exchangeRate").text(data+" "+receivingCountry+"/USD");
+            },
+            error: function (error){
+                alert("서버오류로 환율정보를 조회할 수 없습니다.");
+            }
+        });
+    }
+
+    function getReceivingAmount(){
+        let receivingCountry = $("#currency option:selected").val();
+        let amount = $(".receivingAmount").val();
+
+        if(amount<0 || amount>10000){
+            alert("송금액이 바르지 않습니다.");
+            $(".receivingAmount").val('');
+            return false;
+        }
+
+        $.ajax({
+            url: '/api/receiving-amount?receivingCountry='+receivingCountry+"&amount="+amount,
+            method: 'GET',
+            success: function (data){
+                $(".calculatedAmount").text("수취금액은 "+data.receivingAmount+" "+receivingCountry+" 입니다.");
+                $("#exchangeRate").text(data.quote+" "+receivingCountry+"/USD")
+            },
+            error: function (error) {
+                if (error.status == 400) {
+                    alert("송금액이 바르지 않습니다.");
+                    $(".receivingAmount").val('');
+                } else {
+                    alert("서버 오류로 수취금액을 계산할 수 없습니다.");
+                }
+            }
+        });
+    }
+</script>
+</html>
