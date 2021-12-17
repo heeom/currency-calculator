@@ -6,7 +6,6 @@ import me.swim.currencycalc.dto.ReceivingAmountReqDto;
 import me.swim.currencycalc.dto.ReceivingAmountResDto;
 import me.swim.currencycalc.util.CurrencyFormatUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -28,9 +27,9 @@ public class CurrencyCalcService {
     }
 
     public double getExchangeRate(String receivingCountry) {
-        ExchangeRateInfoDto exchangeRateResult = getCurrencyLayerApi(receivingCountry);
-        return exchangeRateResult.getQuotes()
-                .getOrDefault(remitter+receivingCountry,0.0);
+        ExchangeRateInfoDto infoDto = getCurrencyLayerApi(receivingCountry);
+        checkSuccess(infoDto);
+        return infoDto.getQuotes().get(remitter+receivingCountry);
     }
 
     private ExchangeRateInfoDto getCurrencyLayerApi(String receivingCountry) {
@@ -40,8 +39,17 @@ public class CurrencyCalcService {
                         + "&currencies=" + receivingCountry
                         + "&format=1")
                 .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
+                            clientResponse -> clientResponse.bodyToMono(String.class)
+                                    .map(body -> new RuntimeException(body))) //400번 또는 500번 error -> RuntimeException
                 .bodyToMono(ExchangeRateInfoDto.class)
-                .block();
+                .block(); // 동기식
+    }
+
+    private void checkSuccess(ExchangeRateInfoDto infoDto){
+        if(!infoDto.isSuccess()){
+            throw new RuntimeException("error msg : "+infoDto.getError().get("info"));
+        }
     }
 
     public ReceivingAmountResDto getReceivingAmount(ReceivingAmountReqDto reqDto){

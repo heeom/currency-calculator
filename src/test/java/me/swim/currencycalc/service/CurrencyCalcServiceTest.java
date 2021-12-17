@@ -62,8 +62,20 @@ class CurrencyCalcServiceTest {
         for (ConstraintViolation<ReceivingAmountReqDto> v :validate){
             System.out.println("유효성 검사: "+v.getMessage());
         }
+    }
 
+    @DisplayName("수취국 환율 조회 NullPoint Exception 핸들링")
+    @Test
+    void getExchangeRate_Exception(){
+        String receivingCountry = "ERROR";
+
+        try {
+            currencyCalcService.getExchangeRate(receivingCountry);
+        }catch(NullPointerException e){
+            System.out.println(e.getMessage());
+        }
 
     }
+
 
 }
