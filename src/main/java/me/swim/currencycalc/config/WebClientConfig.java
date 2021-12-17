@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-public class SpringConfig {
+public class WebClientConfig {
 
     @Value("${currencylayer.baseurl}")
     private String baseURL;
