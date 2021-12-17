@@ -1,10 +1,10 @@
 currencylayer:
   baseurl: http://api.currencylayer.com
-  access-key: dd5335804af1961828bd4490c76c62a9
+  access-key: 0712f36577982864724cb79c7da34cd5
   remitter: USD
 
-
-server:
-  error:
-    whitelabel:
-      enabled: false
+spring:
+  mvc:
+    view:
+      prefix: /resources/templates/
+      suffix: .html

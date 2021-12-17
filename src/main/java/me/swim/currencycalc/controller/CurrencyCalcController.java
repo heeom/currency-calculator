@@ -1,6 +1,5 @@
 package me.swim.currencycalc.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import me.swim.currencycalc.dto.ReceivingAmountReqDto;
 import me.swim.currencycalc.dto.ReceivingAmountResDto;
 import me.swim.currencycalc.service.CurrencyCalcService;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 
+@Validated
 @RequestMapping("/api")
 @RestController
 public class CurrencyCalcController {
@@ -22,7 +22,7 @@ public class CurrencyCalcController {
     }
 
     @GetMapping("/exchange-rate")
-    public ResponseEntity<String> getExchangeRate(String receivingCountry){
+    public ResponseEntity<String> getExchangeRate(@NotBlank String receivingCountry){
         return ResponseEntity.ok(CurrencyFormatUtil.formatCurrency(currencyCalcService.getExchangeRate(receivingCountry)));
     }
 
@@ -30,5 +30,4 @@ public class CurrencyCalcController {
     public ResponseEntity<ReceivingAmountResDto> getReceivingAmount(@Validated ReceivingAmountReqDto reqDto){
         return ResponseEntity.ok(currencyCalcService.getReceivingAmount(reqDto));
     }
-
 }

@@ -7,7 +7,11 @@ import me.swim.currencycalc.dto.ReceivingAmountResDto;
 import me.swim.currencycalc.util.CurrencyFormatUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
+
+import javax.validation.constraints.NotBlank;
 
 
 @Slf4j
@@ -15,14 +19,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class CurrencyCalcService {
 
     private final WebClient webClient;
-    private final String ACCESS_KEY;
+    private final String access_key;
     private final String remitter;
 
     public CurrencyCalcService(WebClient webClient,
                                @Value("${currencylayer.access-key}") String key,
                                 @Value("${currencylayer.remitter}") String remitter) {
         this.webClient = webClient;
-        this.ACCESS_KEY = key;
+        this.access_key = key;
         this.remitter = remitter;
     }
 
@@ -33,8 +37,9 @@ public class CurrencyCalcService {
     }
 
     private ExchangeRateInfoDto getCurrencyLayerApi(String receivingCountry) {
+
         return webClient.get()
-                .uri("/live?access_key=" + ACCESS_KEY
+                .uri("/live?access_key=" + access_key
                         + "&source=" + remitter
                         + "&currencies=" + receivingCountry
                         + "&format=1")
@@ -48,7 +53,7 @@ public class CurrencyCalcService {
 
     private void checkSuccess(ExchangeRateInfoDto infoDto){
         if(!infoDto.isSuccess()){
-            throw new RuntimeException("error msg : "+infoDto.getError().get("info"));
+            throw new RuntimeException(infoDto.getError().get("info"));
         }
     }
 
