@@ -7,11 +7,7 @@ import me.swim.currencycalc.dto.ReceivingAmountResDto;
 import me.swim.currencycalc.util.CurrencyFormatUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
-
-import javax.validation.constraints.NotBlank;
 
 
 @Slf4j
