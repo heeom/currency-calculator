@@ -38,7 +38,7 @@ class CurrencyCalcServiceTest {
     void getReceivingAmount(){
         ReceivingAmountReqDto reqDto = new ReceivingAmountReqDto();
         reqDto.setAmount(100);
-        reqDto.setReceivingCountry("KRW");
+        reqDto.setReceiver("KRW");
 
         ReceivingAmountResDto receivingAmountDto = currencyCalcService.getReceivingAmount(reqDto);
 
@@ -52,7 +52,7 @@ class CurrencyCalcServiceTest {
         ReceivingAmountReqDto reqDto = new ReceivingAmountReqDto();
 //        reqDto.setAmount(-1); //0 이하
         reqDto.setAmount(99999); //10000 이상
-        reqDto.setReceivingCountry(" "); //공백
+        reqDto.setReceiver(" "); //공백
 
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();

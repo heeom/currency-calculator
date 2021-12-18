@@ -22,7 +22,7 @@ public class CurrencyCalcController {
     }
 
     @GetMapping("/exchange-rate")
-    public ResponseEntity<String> getExchangeRate(@NotBlank String receivingCountry){
+    public ResponseEntity<String> getExchangeRate(@NotBlank @RequestParam("receiver") String receivingCountry){
         return ResponseEntity.ok(CurrencyFormatUtil.formatCurrency(currencyCalcService.getExchangeRate(receivingCountry)));
     }
 

@@ -55,7 +55,7 @@
     function getExchangeRate(){
         let receivingCountry = $("#currency option:selected").val();
         $.ajax({
-            url: '/api/exchange-rate?receivingCountry='+receivingCountry,
+            url: '/api/exchange-rate?receiver='+receivingCountry,
             method: 'GET',
             success: function (data){
                     $("#exchangeRate").text(data+" "+receivingCountry+"/USD");
@@ -77,7 +77,7 @@
         }
 
         $.ajax({
-            url: '/api/receiving-amount?receivingCountry='+receivingCountry+"&amount="+amount,
+            url: '/api/receiving-amount?receiver='+receivingCountry+"&amount="+amount,
             method: 'GET',
             success: function (data){
                 $(".calculatedAmount").text("수취금액은 "+data.receivingAmount+" "+receivingCountry+" 입니다.");

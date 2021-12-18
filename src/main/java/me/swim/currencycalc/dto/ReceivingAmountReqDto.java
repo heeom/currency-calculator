@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 public class ReceivingAmountReqDto {
 
     @NotBlank
-    private String receivingCountry;
+    private String receiver;
 
     @Range(min = 0, max = 10000)
     private double amount;

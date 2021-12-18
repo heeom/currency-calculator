@@ -54,7 +54,7 @@ public class CurrencyCalcService {
     }
 
     public ReceivingAmountResDto getReceivingAmount(ReceivingAmountReqDto reqDto){
-        double exchangeRate = getExchangeRate(reqDto.getReceivingCountry());
+        double exchangeRate = getExchangeRate(reqDto.getReceiver());
 
         return ReceivingAmountResDto.builder()
                 .quote(CurrencyFormatUtil.formatCurrency(exchangeRate))
