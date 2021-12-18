@@ -2,7 +2,7 @@ package me.swim.currencycalc.dto;
 
 import lombok.*;
 
-import java.util.HashMap;
+import java.util.Map;
 
 @Builder
 @NoArgsConstructor
@@ -14,6 +14,6 @@ public class ExchangeRateInfoDto {
     private String privacy;
     private String timestamp;
     private String source;
-    private HashMap<String, Double> quotes;
-    private HashMap<String, String> error;
+    private Map<String, Double> quotes;
+    private Map<String, String> error;
 }
